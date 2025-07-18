@@ -37,12 +37,8 @@ This project is designed for demonstration, but feel free to remix it for:
 ## 📂 Files
 
 - `HarmoniPath.json` – Full export of the working n8n flow.
-- `assets/banner.png` – Project banner (for Notion or GitHub Pages)
 - `README.md` – You’re reading it!
 
-## 📸 Preview
-
-![HarmoniPath Banner](./assets/banner.png)
 
 ## 🙌 Credits
 
