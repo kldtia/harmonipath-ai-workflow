@@ -1,0 +1,417 @@
+{
+  "name": "HarmoniPath",
+  "nodes": [
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.tavily.com/search",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "query",
+              "value": "{{$node[\"Basic LLM Chain\"].json[\"result\"]}}\n"
+            },
+            {
+              "name": "search_depth",
+              "value": "basic"
+            }
+          ]
+        },
+        "headerParametersUi": {
+          "parameter": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "name": "Tavily Research",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        520,
+        180
+      ],
+      "id": "04843ab2-07a1-4b81-8220-2d4867056e4a"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "chatgpt-4o-latest"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        500
+      ],
+      "id": "0cbbc071-0377-454d-9ba8-2d040b74938a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "LAgSSn5vxv7IyWxl",
+          "name": "HarmoniPathProject"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "appSKCVLNh7NuRNbw"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblwDwKoadG9BIhQl",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Career Blueprint Notes": "={{$json[\"text\"]}}\n"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Burnout Persona",
+              "displayName": "Burnout Persona",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "AI-Recommended Role",
+              "displayName": "AI-Recommended Role",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended Tools",
+              "displayName": "Recommended Tools",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Career Blueprint Notes",
+              "displayName": "Career Blueprint Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        760,
+        180
+      ],
+      "id": "74303cdf-0bad-4f60-bd0e-a8dee74251df",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "a3rHiNPRmwnzCcWv",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a career AI strategist helping job seekers who are burned out from traditional tech roles or government contracting. Your task is to offer clarity and direction using emerging AI-powered career paths.\n\nBased on the following user persona input:\n\"{{$json[\"persona\"]}}\"\n\nProvide:\n1. ✨ Two AI-enhanced job role suggestions that align with their experience and emotional needs (e.g., fulfillment, flexibility, stability)\n2. 🧠 One or two transferable soft skills that give them an edge\n3. 🛠️ AI tools or workflows they could explore to make their work lighter, not harder\n4. 🧭 A simple encouragement statement, as if you were a human career coach cheering them on\n\nTone: warm, real, uplifting — like a trusted mentor who gets it.\n\nOutput format:\n- Suggested Roles: \n- Transferable Skills: \n- AI Tools/Workflows: \n- Encouragement:\n",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "AIMessagePromptTemplate",
+              "message": "=\n{{$node[\"Edit Fields\"].json[\"Burnout Persona\"]}}\n"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        120,
+        200
+      ],
+      "id": "5bc58c82-2479-4915-b0a7-44b237512e21",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Full Name\": \"Test Name\",\n  \"Email\": \"test@example.com\",\n  \"Burnout Persona\": \"Visionary Pathfinder\",\n  \"AI-Recommended Role\": \"AI Workflow Strategist\",\n  \"Recommended Tools\": \"n8n, Airtable, ChatGPT\",\n  \"Career Blueprint Notes\": \"Focus on roles with creative freedom and flexible deadlines.\"\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -100,
+        180
+      ],
+      "id": "09909c2d-9f79-405e-9365-4841f593b489",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "formTitle": "HarmoniPath Career Check-In",
+        "formDescription": "Feeling stuck, burned out, or ready for something new?\nThis quick check-in is designed for career pivoters — especially those navigating life after GovCon, corporate fatigue, or tech burnout.\n\nWith just a few questions, you’ll help our AI workflow understand your goals, challenges, and strengths.\nIn return, you’ll receive tailored career insights, clarity on your next steps, and an optional AI-powered role fit summary — all curated to help you move forward with more harmony and purpose.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Current_Role",
+              "placeholder": "e.g., Scrum Master, Project Coordinator",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "industry_background",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Government Contracting"
+                  },
+                  {
+                    "option": "Tech / SaaS"
+                  },
+                  {
+                    "option": "Education"
+                  },
+                  {
+                    "option": "Healthcare"
+                  },
+                  {
+                    "option": "Finance"
+                  },
+                  {
+                    "option": "Other"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Career_Goals",
+              "fieldType": "textarea",
+              "placeholder": "I want to move into AI workflow roles that blend with Agile",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Skills",
+              "fieldType": "textarea",
+              "placeholder": "Automation, design, prompting ",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Challeneges",
+              "fieldType": "textarea",
+              "placeholder": " Politics, outdated systems, lack of clarity\"",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -300,
+        180
+      ],
+      "id": "45525c25-537b-4042-a2f6-3425ee832155",
+      "name": "On form submission",
+      "webhookId": "5be2d335-766e-42a2-85c0-003e48489de4"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$node[\"On form submission\"].json[\"email\"]}}\n\n\n",
+        "subject": "✨ Your Personalized AI Career Pivot Summary",
+        "message": "=<strong>Career Focus:</strong><br>\nAI-Powered Pivot Strategy<br><br>\n\n<strong>AI Summary:</strong><br>\n{{$json[\"text\"]}}<br><br>\n\n<strong>Helpful Resource:</strong><br>\n<a href=\"https://learnprompting.org/\">Click to read more</a><br><br>\n\n\nStay grounded, stay inspired. You’ve got this. 💪<br><br>\n\nWarmly,<br>\nKatia’s Cylife AI ✨\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        400
+      ],
+      "id": "9cdac796-4fc4-4450-bc1c-20515c53ef99",
+      "name": "Send a message",
+      "webhookId": "91791a68-38b3-4ded-9f94-506ea388b18e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XepHv32EcQzeFppL",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "On form submission": [
+      {
+        "json": {
+          "Name ": "Katia",
+          "Current_Role": "Scrum Master",
+          "industry_background": "Government Contracting",
+          "Career_Goals": "I want to move to an AI workflow automation ",
+          "Skills": "automation, engineering, scrum, agile, content creation ",
+          "Challeneges": "lack of clarity ",
+          "email": "katiadean@gmail.com",
+          "submittedAt": "2025-07-17T21:06:34.919-04:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Tavily Research": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Tavily Research",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "54b7e629-648d-4d99-aac0-744219d5a2eb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e2e22035aac6e91b75c6be223130fa61cae5d020b7910ca0ad396259f0b4466b"
+  },
+  "id": "UvQWOJZbdzm7eKRz",
+  "tags": []
+}
